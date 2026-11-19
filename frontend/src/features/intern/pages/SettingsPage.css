@@ -1,0 +1,209 @@
+.settings-page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.settings-card {
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 12px;
+  padding: 1.75rem 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.settings-card h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-main, #0f172a);
+}
+
+.settings-section-desc {
+  margin: 0 0 1.5rem 0;
+  font-size: 0.9rem;
+  color: var(--color-text-muted, #64748b);
+  line-height: 1.5;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.settings-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-main, #1e293b);
+}
+
+.settings-field .required {
+  color: #ef4444;
+}
+
+.settings-field-value {
+  padding: 0.65rem 0.85rem;
+  background: var(--color-bg-subtle, #f8fafc);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--color-text-main, #334155);
+}
+
+.settings-field-value.readonly {
+  color: var(--color-text-muted, #64748b);
+  cursor: not-allowed;
+}
+
+.settings-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.settings-field input[type="text"],
+.settings-field input[type="password"],
+.settings-field input[type="tel"] {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  background: var(--color-bg-input, #ffffff);
+  border: 1px solid var(--color-border, #cbd5e1);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--color-text-main, #0f172a);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.settings-field input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.editable-field-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.editable-field-row input {
+  flex: 1;
+}
+
+.settings-btn-inline {
+  padding: 0.55rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.15s ease;
+}
+
+.btn-secondary {
+  background: var(--color-border, #e2e8f0);
+  color: var(--color-text-main, #334155);
+}
+.btn-secondary:hover {
+  background: #cbd5e1;
+}
+
+.btn-primary-small {
+  background: #2563eb;
+  color: #ffffff;
+}
+.btn-primary-small:hover {
+  background: #1d4ed8;
+}
+
+.password-hints {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.35rem;
+}
+
+.hint-pill {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  background: #f1f5f9;
+  color: #64748b;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.hint-pill.valid {
+  background: #dcfce7;
+  color: #15803d;
+  font-weight: 600;
+}
+
+.field-hint-error {
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.settings-checkbox-row {
+  margin-top: -0.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.settings-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted, #475569);
+  cursor: pointer;
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border, #f1f5f9);
+}
+
+.settings-inline-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #991b1b;
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .settings-card {
+    padding: 1.25rem 1rem;
+  }
+  .editable-field-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .settings-actions {
+    flex-direction: column;
+  }
+  .settings-actions button {
+    width: 100%;
+  }
+}

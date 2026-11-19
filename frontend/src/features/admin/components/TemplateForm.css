@@ -1,0 +1,131 @@
+.admin-submit {
+  padding: 10px 18px;
+  border: 1px solid var(--success);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--success);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-submit:hover:not(:disabled) {
+  background: var(--success);
+  color: #fff;
+}
+
+.admin-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Certificate template redesign */
+.template-form-panel {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.template-form-panel form {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Top inputs card matching the design */
+.template-top-fields-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 22px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 16px var(--shadow);
+}
+
+.template-top-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.template-top-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.template-top-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.template-top-input {
+  background: var(--input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-size: 13.5px;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.template-top-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.template-top-input::placeholder {
+  color: var(--muted);
+}
+
+.template-top-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+  padding-right: 36px;
+}
+
+.template-top-select option {
+  background: var(--panel);
+  color: var(--text);
+}
+
+.template-editor-wrapper {
+  width: 100%;
+  min-width: 0;
+}
+
+.template-form-cancel-row {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.template-secondary-button {
+  padding: 8px 18px;
+  background: var(--input);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.template-secondary-button:hover {
+  background: color-mix(in srgb, var(--panel) 85%, var(--accent) 15%);
+  border-color: var(--accent);
+}

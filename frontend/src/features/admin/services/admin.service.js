@@ -1,0 +1,189 @@
+import axios from "axios";
+import { API_BASE_URL } from "../../../shared/config/api";
+
+const adminApi = axios.create({
+  baseURL: API_BASE_URL,
+  headers: { "Content-Type": "application/json" },
+  withCredentials: true,
+});
+
+const request = async (method, url, payload, config = {}) => {
+  try {
+    const response = await adminApi({ method, url, data: payload, ...config });
+    return response.data;
+  } catch (error) {
+    const data = error.response?.data;
+    const validationMessage = data?.errors?.map(({ msg }) => msg).join(" ");
+    throw new Error(
+      validationMessage ||
+        data?.message ||
+        (error.response?.status === 500
+          ? "Internal server error."
+          : "Request failed."),
+      { cause: error },
+    );
+  }
+};
+
+export const createIntern = (payload) =>
+  request("post", "/api/admin/create-intern", payload);
+export const createTeamLeader = (payload) =>
+  request("post", "/api/admin/create-tl", payload);
+export const getAllTeamLeaders = () => request("get", "/api/admin/teamleaders");
+export const getInternsByTeamLeader = (id) =>
+  request("get", `/api/admin/teamleaders/${id}/interns`);
+export const getForwardedRequests = () =>
+  request("get", "/api/admin/forwarded-requests");
+export const finalizeRequest = (id, action, rejectionReason) =>
+  request(
+    "patch",
+    `/api/admin/requests/${id}/finalize`,
+    action === "reject" ? { action, rejectionReason } : { action },
+  );
+
+// ================================
+// Certificate Template APIs Day 1
+// ================================
+
+export const createTemplate = (payload) =>
+  request("post", "/api/admin/templates", payload);
+
+export const getAllTemplates = () => request("get", "/api/admin/templates");
+
+export const updateTemplate = (id, payload) =>
+  request("patch", `/api/admin/templates/${id}`, payload);
+
+export const toggleTemplateActive = (id) =>
+  request("patch", `/api/admin/templates/${id}/toggle`);
+
+export const getTemplatePlaceholders = () =>
+  request("get", "/api/admin/templates/placeholders");
+
+// ================================
+// Certificate DRAFT
+// ================================
+
+export const getCertificateDraft = (id) =>
+  request("get", `/api/admin/certificates/${id}`);
+
+export const getAllCertificates = () =>
+  request("get", "/api/admin/certificates");
+
+export const downloadCertificatePdf = async (id) => {
+  const response = await adminApi.get(
+    `/api/admin/certificates/${id}/download`,
+    {
+      responseType: "blob",
+    },
+  );
+
+  return response;
+};
+
+export const renderPreviewPdf = async (htmlContent, title = "certificate") => {
+  const response = await adminApi.post(
+    "/api/admin/render-preview-pdf",
+    { htmlContent, title },
+    {
+      responseType: "blob",
+    },
+  );
+
+  return response;
+};
+
+export const updateCertificateDraft = (id, htmlContent) =>
+  request("patch", `/api/admin/certificates/${id}`, {
+    htmlContent,
+  });
+
+export const finalizeCertificate = (id) =>
+  request("post", `/api/admin/certificates/${id}/finalize`);
+
+export const retryCertificateGeneration = (id) =>
+  request("post", `/api/admin/requests/${id}/retry-generation`);
+// Admin Analytics
+export const getAdminAnalytics = (endpoint, params = {}) =>
+  request(
+    "get",
+    `/api/admin/analytics/${endpoint}${Object.keys(params).length ? `?${new URLSearchParams(Object.entries(params).filter(([, value]) => value !== "" && value != null)).toString()}` : ""}`,
+  );
+
+export const exportAdminAnalytics = async (
+  type,
+  params = {},
+  format = "csv",
+) => {
+  const query = new URLSearchParams({
+    ...Object.fromEntries(
+      Object.entries(params).filter(
+        ([, value]) => value !== "" && value != null,
+      ),
+    ),
+    type,
+    format,
+  });
+  const response = await adminApi.get(
+    `/api/admin/analytics/export?${query.toString()}`,
+    { responseType: "blob" },
+  );
+  return response.data;
+};
+
+// ================================
+// Task C: Retention Policy & Archived Interns
+// ================================
+
+export const getRetentionPolicy = () =>
+  request("get", "/api/admin/retention-policy");
+
+export const updateRetentionPolicy = (payload) =>
+  request("patch", "/api/admin/retention-policy", payload);
+
+export const getArchivedInterns = () =>
+  request("get", "/api/admin/interns/archived");
+
+export const restoreArchivedIntern = (id) =>
+  request("patch", `/api/admin/interns/${id}/restore`);
+
+// ================================
+// Task D: Audit Logs
+// ================================
+
+export const getAuditLogs = (params = {}) => {
+  const query = new URLSearchParams();
+  Object.entries(params).forEach(([key, val]) => {
+    if (val !== undefined && val !== null && val !== "") {
+      query.append(key, val);
+    }
+  });
+  const qs = query.toString();
+  return request("get", `/api/admin/audit-logs${qs ? `?${qs}` : ""}`);
+};
+
+export const exportAuditLogs = async (params = {}) => {
+  const query = new URLSearchParams();
+  Object.entries(params).forEach(([key, val]) => {
+    if (val !== undefined && val !== null && val !== "") {
+      query.append(key, val);
+    }
+  });
+  const qs = query.toString();
+  const response = await adminApi.get(
+    `/api/admin/audit-logs/export${qs ? `?${qs}` : ""}`,
+    { responseType: "blob" },
+  );
+  return response;
+};
+
+// ================================
+// Task F: Certificate Revocation
+// ================================
+
+export const revokeCertificate = (id, reason) =>
+  request("patch", `/api/admin/certificates/${id}/revoke`, { reason });
+
+export const unrevokeCertificate = (id) =>
+  request("patch", `/api/admin/certificates/${id}/unrevoke`);
+
+

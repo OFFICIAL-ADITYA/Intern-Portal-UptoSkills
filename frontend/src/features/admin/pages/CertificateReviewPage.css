@@ -1,0 +1,262 @@
+/* ================================
+   Certificate Review Top Section
+================================ */
+
+.certificate-review-page {
+  width: 100%;
+  padding: 18px 30px 50px;
+  box-sizing: border-box;
+}
+
+.certificate-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  height: 38px;
+  padding: 0 15px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+
+  background: var(--card);
+  color: var(--text);
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.certificate-back-button:hover {
+  background: var(--input);
+  border-color: #7168e8;
+  transform: translateX(-2px);
+}
+
+.certificate-back-button:active {
+  transform: translateX(0);
+}
+
+.back-arrow {
+  font-size: 17px;
+  line-height: 1;
+}
+
+/* Heading */
+
+.certificate-review-heading {
+  margin-top: 22px;
+  margin-bottom: 28px;
+}
+
+.certificate-review-heading .admin-eyebrow {
+  margin-bottom: 7px;
+}
+
+.certificate-review-heading h1 {
+  margin: 0 0 8px;
+
+  color: var(--text);
+
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.6px;
+}
+
+.certificate-review-heading p {
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ---------- MAIN ---------- */
+
+/* ---------- ACTION BAR & DRAFT INFO ---------- */
+
+.certificate-review-action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 20px;
+  margin-bottom: 20px;
+}
+
+.draft-meta-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.draft-badge {
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  border: 1px solid #fde68a;
+  text-transform: uppercase;
+}
+
+.draft-cert-num {
+  font-family: monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--input);
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.draft-intern-name {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.draft-intern-name strong {
+  color: var(--text);
+}
+
+.draft-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-review-save {
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-review-save:hover:not(:disabled) {
+  background: var(--input);
+  border-color: #7168e8;
+}
+
+.btn-review-finalize {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, var(--brand-teal, #0d9488), #0f766e);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
+  transition: all 0.2s ease;
+}
+
+.btn-review-finalize:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0f766e, #115e59);
+  box-shadow: 0 6px 18px rgba(13, 148, 136, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-review-save:disabled,
+.btn-review-finalize:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ---------- ERROR & RETRY BANNER ---------- */
+
+.review-error-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 12px 18px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.btn-retry-action {
+  background: #b91c1c;
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btn-retry-action:hover {
+  opacity: 0.9;
+}
+
+/* ---------- EDITOR CONTAINER ---------- */
+
+.certificate-review-editor-container {
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.certificate-not-found {
+  padding: 40px;
+  text-align: center;
+  font-size: 16px;
+  color: var(--muted);
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 768px) {
+  .certificate-review-action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .draft-action-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-review-save,
+  .btn-review-finalize {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .certificate-review-page {
+    padding: 16px;
+  }
+
+  .certificate-review-heading h1 {
+    font-size: 28px;
+  }
+}

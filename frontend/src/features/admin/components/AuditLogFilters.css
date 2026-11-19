@@ -1,0 +1,104 @@
+.audit-filters-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+.audit-date-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.audit-preset-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.audit-preset-btn:hover {
+  background: var(--surface-hover, rgba(255, 255, 255, 0.05));
+  color: var(--text);
+  border-color: var(--border-hover, #64748b);
+}
+
+.audit-preset-btn.active {
+  background: var(--primary, #0284c7);
+  color: #ffffff;
+  border-color: var(--primary, #0284c7);
+}
+
+.audit-filter-inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.audit-filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.audit-filter-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.audit-input,
+.audit-select {
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13.5px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.audit-input:focus,
+.audit-select:focus {
+  border-color: var(--primary, #0284c7);
+}
+
+.audit-filter-actions {
+  display: flex;
+  align-items: center;
+  height: 38px;
+}
+
+.audit-reset-btn {
+  height: 100%;
+  padding: 0 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.audit-reset-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  color: #ef4444;
+}

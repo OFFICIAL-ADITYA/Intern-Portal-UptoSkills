@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UptoSkills Support Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --bg: #ffffff;
+      --bg-alt: #f9fafb;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --shadow: 0 16px 48px rgba(0, 0, 0, 0.18), 0 2px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .demo-container {
+      max-width: 600px;
+      text-align: center;
+      padding: 40px 24px;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .demo-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #818cf8;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+
+    .demo-title {
+      font-size: clamp(26px, 4vw, 36px);
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .demo-desc {
+      color: #94a3b8;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .demo-hint {
+      font-size: 13px;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .demo-hint-icon {
+      color: #818cf8;
+      flex-shrink: 0;
+    }
+
+    /* Floating Button */
+    #chat-widget-button {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      width: 58px;
+      height: 58px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(79, 70, 229, 0.4);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #chat-widget-button:hover {
+      transform: scale(1.08) translateY(-2px);
+      box-shadow: 0 12px 30px rgba(79, 70, 229, 0.55);
+    }
+
+    #chat-widget-button:active {
+      transform: scale(0.95);
+    }
+
+    #chat-widget-button:focus-visible,
+    .chat-close-btn:focus-visible,
+    .chat-chip:focus-visible,
+    #chat-send:focus-visible {
+      outline: 2px solid #818cf8;
+      outline-offset: 3px;
+    }
+
+    .chat-btn-pulse {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 13px;
+      height: 13px;
+      background: #10b981;
+      border: 2.5px solid #ffffff;
+      border-radius: 50%;
+      animation: pulseBeacon 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseBeacon {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    /* Mobile Backdrop */
+    #chat-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+    }
+
+    /* Floating Chat Box */
+    #chat-widget-box {
+      display: none;
+      position: fixed;
+      bottom: 96px;
+      right: 24px;
+      width: 380px;
+      height: 520px;
+      max-width: calc(100vw - 32px);
+      max-height: calc(100vh - 120px);
+      background: var(--bg);
+      color: var(--text);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 1000;
+      border: 1px solid var(--border);
+      animation: chatFadeUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes chatFadeUp {
+      from { opacity: 0; transform: translateY(16px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    #chat-header {
+      background: linear-gradient(135deg, var(--primary) 0%, #4338ca 100%);
+      color: white;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+
+    .chat-header-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .chat-avatar-ring {
+      position: relative;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .chat-avatar-ring span {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .chat-beacon {
+      position: absolute;
+      bottom: -1px;
+      right: -1px;
+      width: 10px;
+      height: 10px;
+      background: #10b981;
+      border: 2px solid #4338ca;
+      border-radius: 50%;
+    }
+
+    .chat-header-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .chat-header-subtitle {
+      font-size: 11px;
+      opacity: 0.85;
+      font-weight: 500;
+    }
+
+    .chat-close-btn {
+      cursor: pointer;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      color: white;
+      background: rgba(255, 255, 255, 0.15);
+      display: grid;
+      place-items: center;
+      transition: background 0.15s ease;
+    }
+
+    .chat-close-btn:hover {
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    #chat-messages {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: var(--bg-alt);
+      scroll-behavior: smooth;
+    }
+
+    #chat-messages::-webkit-scrollbar {
+      width: 5px;
+    }
+    #chat-messages::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 10px;
+    }
+
+    .message {
+      max-width: 82%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13.5px;
+      line-height: 1.5;
+      word-break: break-word;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .user-msg {
+      align-self: flex-end;
+      background: var(--primary);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+
+    .bot-msg {
+      align-self: flex-start;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+    }
+
+    .typing-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 6px;
+    }
+
+    .typing-dots span {
+      width: 6px;
+      height: 6px;
+      background-color: var(--muted);
+      border-radius: 50%;
+      animation: typingBounce 1.4s infinite ease-in-out both;
+    }
+    .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes typingBounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+      40% { transform: scale(1.1); opacity: 1; }
+    }
+
+    /* Suggestion Chips */
+    .chat-suggestions {
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chat-suggestions-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .chat-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chat-chip {
+      background: var(--bg);
+      color: var(--primary);
+      border: 1px solid rgba(79, 70, 229, 0.25);
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .chat-chip:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    #chat-input-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-top: 1px solid var(--border);
+      padding: 12px 14px;
+      background: var(--bg);
+    }
+
+    #chat-input {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      outline: none;
+      font-size: 13.5px;
+      color: var(--text);
+      background: #ffffff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #chat-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.18);
+    }
+
+    #chat-send {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13.5px;
+      font-weight: 600;
+      transition: background-color 0.15s ease, transform 0.15s ease;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    #chat-send:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    /* Accessibility: Respect Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .chat-btn-pulse {
+        animation: none;
+      }
+    }
+
+    /* Mobile Responsive Viewport */
+    @media (max-width: 640px) {
+      #chat-backdrop {
+        display: none;
+      }
+      #chat-backdrop.active {
+        display: block;
+      }
+
+      #chat-widget-box {
+        bottom: 0;
+        right: 0;
+        left: 0;
+        width: 100%;
+        max-width: 100%;
+        height: 82vh;
+        max-height: 85vh;
+        border-radius: 22px 22px 0 0;
+        border-left: 0;
+        border-right: 0;
+        border-bottom: 0;
+      }
+
+      #chat-input-container {
+        padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Landing Demo Hero -->
+  <main class="demo-container">
+    <div style="margin-bottom: 24px;">
+      <img src="logo.png" alt="UptoSkills - Let's Make Freshers Employable!" style="height: 48px; max-width: 100%; object-fit: contain;" />
+    </div>
+    <div class="demo-badge">Web Support Chatbot</div>
+    <h1 class="demo-title">Fast, Smart Website Support</h1>
+    <p class="demo-desc">
+      Interact with the AI assistant for instant answers regarding internship certificates,
+      verification QR codes, request statuses, and account configurations.
+    </p>
+    <div class="demo-hint">
+      <svg class="demo-hint-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 16 16 12 12 8"></polyline>
+        <line x1="8" y1="12" x2="16" y2="12"></line>
+      </svg>
+      Click the floating chat bubble in the bottom right corner to test.
+    </div>
+  </main>
+
+  <!-- Chat Widget Elements -->
+  <button id="chat-widget-button" onclick="toggleChat()" aria-label="Open Support Assistant" aria-expanded="false">
+    <svg id="chat-icon-open" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+    <svg id="chat-icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+    <span class="chat-btn-pulse" aria-hidden="true"></span>
+  </button>
+
+  <div id="chat-backdrop" onclick="toggleChat()"></div>
+
+  <div id="chat-widget-box" role="dialog" aria-label="Support Assistant">
+    <div id="chat-header">
+      <div class="chat-header-info">
+        <div class="chat-avatar-ring" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+            <circle cx="12" cy="5" r="2"></circle>
+            <path d="M12 7v4"></path>
+            <line x1="8" y1="16" x2="8.01" y2="16"></line>
+            <line x1="16" y1="16" x2="16.01" y2="16"></line>
+          </svg>
+          <span class="chat-beacon"></span>
+        </div>
+        <div>
+          <div class="chat-header-title">Website Assistant</div>
+          <div class="chat-header-subtitle">UptoSkills • Instant Answers</div>
+        </div>
+      </div>
+      <button type="button" class="chat-close-btn" onclick="toggleChat()" aria-label="Close support chat">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div id="chat-messages">
+      <div class="message bot-msg">
+        Hello! I'm your UptoSkills Support Assistant. How can I help you today?
+      </div>
+      
+      <div class="chat-suggestions" id="chat-suggestions">
+        <div class="chat-suggestions-title">Common Questions</div>
+        <div class="chat-chips">
+          <button type="button" class="chat-chip" onclick="askSuggestion('How to request certificate?')">How to request certificate?</button>
+          <button type="button" class="chat-chip" onclick="askSuggestion('How to verify QR code?')">How to verify QR code?</button>
+          <button type="button" class="chat-chip" onclick="askSuggestion('Track my request status')">Track my request status</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="chat-input-container">
+      <input type="text" id="chat-input" placeholder="Type a message..." onkeypress="handleKey(event)" />
+      <button id="chat-send" onclick="sendMessage()" aria-label="Send message">
+        <span>Send</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let isSending = false;
+
+    function toggleChat() {
+      const chatBox = document.getElementById('chat-widget-box');
+      const backdrop = document.getElementById('chat-backdrop');
+      const button = document.getElementById('chat-widget-button');
+      const iconOpen = document.getElementById('chat-icon-open');
+      const iconClose = document.getElementById('chat-icon-close');
+      const isOpen = chatBox.style.display === 'flex';
+
+      if (isOpen) {
+        chatBox.style.display = 'none';
+        backdrop.classList.remove('active');
+        button.setAttribute('aria-expanded', 'false');
+        if (iconOpen && iconClose) {
+          iconOpen.style.display = 'block';
+          iconClose.style.display = 'none';
+        }
+      } else {
+        chatBox.style.display = 'flex';
+        backdrop.classList.add('active');
+        button.setAttribute('aria-expanded', 'true');
+        if (iconOpen && iconClose) {
+          iconOpen.style.display = 'none';
+          iconClose.style.display = 'block';
+        }
+        document.getElementById('chat-input').focus();
+      }
+    }
+
+    function handleKey(e) {
+      if (e.key === 'Enter') sendMessage();
+    }
+
+    function askSuggestion(question) {
+      const input = document.getElementById('chat-input');
+      input.value = question;
+      sendMessage();
+    }
+
+    async function sendMessage() {
+      if (isSending) return;
+      const input = document.getElementById('chat-input');
+      const messagesContainer = document.getElementById('chat-messages');
+      const text = input.value.trim();
+
+      if (!text) return;
+
+      // Hide suggestions once user sends a message
+      const suggestions = document.getElementById('chat-suggestions');
+      if (suggestions) suggestions.style.display = 'none';
+
+      // Render user message
+      messagesContainer.innerHTML += `<div class="message user-msg">${escapeHtml(text)}</div>`;
+      input.value = '';
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+      // Render typing placeholder
+      isSending = true;
+      const loadingId = 'loading-' + Date.now();
+      messagesContainer.innerHTML += `
+        <div class="message bot-msg" id="${loadingId}">
+          <div class="typing-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>`;
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+      let answer = null;
+
+      // Primary: Try python FastAPI backend on port 8000
+      try {
+        const response = await fetch('http://localhost:8000/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: text })
+        });
+        if (response.ok) {
+          const data = await response.json();
+          answer = data.answer || data.reply;
+        }
+      } catch (err) {
+        // Fallback to Express backend port 5000 if FastAPI is inactive
+        try {
+          const fallbackRes = await fetch('http://localhost:5000/api/intern/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: text })
+          });
+          if (fallbackRes.ok) {
+            const fallbackData = await fallbackRes.json();
+            answer = fallbackData.reply || fallbackData.answer;
+          }
+        } catch (e) {
+          answer = "I'm having trouble connecting to the support server right now. Please ensure the backend is running.";
+        }
+      }
+
+      if (!answer) {
+        answer = "I couldn't find an answer for that right now. Please check our FAQ or contact your team leader.";
+      }
+
+      const botElement = document.getElementById(loadingId);
+      if (botElement) {
+        botElement.innerHTML = escapeHtml(answer);
+      }
+      isSending = false;
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function escapeHtml(string) {
+      const div = document.createElement('div');
+      div.textContent = string;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>

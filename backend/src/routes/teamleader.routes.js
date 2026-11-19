@@ -1,0 +1,34 @@
+import express from 'express';
+import { createInternValidator, reviewTLValidator } from '../validators/portal.validator.js';
+import verifyAuth from '../middlewares/verifyAuth.js';
+import {
+	createIntern,
+	getInternsForTL,
+	getRequestsForReview,
+	reviewRequestAsTL,
+	getMyNotifications,
+	markNotificationAsRead,
+} from '../controllers/teamleader.controller.js';
+
+const teamleaderRouter = express.Router();
+
+teamleaderRouter.use(verifyAuth, (req, res, next) => {
+	if (req.user.role !== 'teamleader') {
+		return res.status(403).json({ message: 'Team leader access required' });
+	}
+
+	next();
+});
+
+teamleaderRouter.post('/create-intern', createInternValidator, createIntern);
+
+teamleaderRouter.get('/interns', getInternsForTL);
+
+teamleaderRouter.get('/requests-for-review', getRequestsForReview);
+
+teamleaderRouter.patch('/requests/:id/review', reviewTLValidator, reviewRequestAsTL);
+
+teamleaderRouter.get('/notifications', getMyNotifications);
+teamleaderRouter.patch('/notifications/:id/read', markNotificationAsRead);
+
+export default teamleaderRouter;

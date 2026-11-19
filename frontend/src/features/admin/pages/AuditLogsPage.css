@@ -1,0 +1,24 @@
+.audit-logs-page {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 10px 0 40px;
+}
+
+.audit-page-header {
+  margin-bottom: 24px;
+}
+
+.audit-page-header h1 {
+  font-size: 28px;
+  color: var(--text);
+  margin: 4px 0 8px;
+}
+
+.audit-page-desc {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0;
+  max-width: 800px;
+  line-height: 1.5;
+}
